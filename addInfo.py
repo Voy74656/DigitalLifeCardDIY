@@ -31,7 +31,7 @@ DEFAULT_NAME_EN = ''
 
 DEFAULT_BIRTH_DATE = '19000101'
 
-DEFAULT_PN_CODE = 'PN-R-DSM01 A513C'
+DEFAULT_SN_CODE = 'PN-R-DSM01 A513C'
 
 DEFAULT_BARCODE = ''.join(str(uuid.uuid1(clock_seq=18)).split('-'))[:18]
 
@@ -76,7 +76,7 @@ def add_one(name, name_EN, birth, my_year, SN, sn_text, img):
         name = name[0:4]
 
     if len(birth) != 8:
-        birth = "19000101"
+        birth = DEFAULT_BIRTH_DATE
 
     if len(SN) > 18:
         SN = SN[0:18]
@@ -86,10 +86,10 @@ def add_one(name, name_EN, birth, my_year, SN, sn_text, img):
     if len(sn_text) > 20:
         sn_text = sn_text[0:20]
     if len(sn_text) == 0 or sn_text.isspace():
-        sn_text = "PN-R-DSM01 A513C"
+        sn_text = DEFAULT_SN_CODE
 
     if len(my_year) != 4:
-        my_year = "2023"
+        my_year = DEFAULT_YEAR
 
     sn_text = sn_text.upper()
 
@@ -134,12 +134,14 @@ def add_one(name, name_EN, birth, my_year, SN, sn_text, img):
 
 def single_test():
     my_name = input("输入名字，最多四个字，默认为图丫丫：") or DEFAULT_NAME_CN # 名字,最多四个字，再多不支持了
-    my_name_EN = pinyin.get_pinyin(my_name, splitter='', convert='upper')
+    if DEFAULT_NAME_EN == '':
+        my_name_EN = pinyin.get_pinyin(my_name, splitter='', convert='upper')
+    else:
+        my_name_EN = DEFAULT_NAME_EN
 
-    my_name_EN = DEFAULT_NAME_EN
-
-    if my_name_EN == '' and input(f'\n名字拼音为：{my_name_EN}\n是否手动输入拼音/英文名？\n输入y进入手动输入，不输入或输入其他跳过\n') == 'y':
+    if input(f'\n名字拼音为：{my_name_EN}\n是否手动输入拼音/英文名？\n输入y进入手动输入，不输入或输入其他跳过\n') == 'y':
         my_name_EN = input("\n输入名字拼音或英文名。支持非中文字符：\n").upper()
+    print(f'英文名已经设置为：{my_name_EN}')
 
     my_birth = input("\n输入生日，示例：19000101：\n")  # 生日
 
@@ -151,7 +153,7 @@ def single_test():
 
     my_year = input("\n顶部年份，固定四位\n也可自定义为其他四位短语，仅支持非中文字符\n，示例：1900，CM02等：\n")  # 顶部年份
 
-    my_sn_text = input("\n输入自定义pn码\n不输入即为默认(PN-R-DSM01 A513C)\n")  # 生日
+    my_sn_text = input("\n输入自定义pn码\n不输入即为默认(PN-R-DSM01 A513C)\n") or DEFAULT_SN_CODE  # 生日
 
     with open(f'水贴底图 4K B.png', 'rb') as f:
         BaseImg = Image.open(fp=f)
@@ -159,8 +161,11 @@ def single_test():
         add_one(my_name, my_name_EN, my_birth,
                 my_year, barcode_text, my_sn_text, img)
         img.save("./output/%s.png" % (my_name))
+        print('\nPNG 生成成功')
         make_tif("./output/%s.png" % (my_name))
+        print('\nTIF 生成成功')
     pass
+    print('全部完成')
 
 
 def batch_gen():
