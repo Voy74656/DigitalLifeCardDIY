@@ -8,7 +8,7 @@
 
 ![image](水贴成品%204K%20A.png)
 
-## 使用方法
+## 使用准备
 
 ### 前提：python环境安装和pip安装
 
@@ -58,9 +58,28 @@ git clone https://gitee.com/Voy74656/DigitalLifeCardDIY.git
 pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirement.txt
 ```
 
-### 生成自定义生命卡水贴
+## 使用方法
 
-使用python执行脚本，根据交互命令进行自定义
+参照帮助
+
+```bash
+voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python3 ./addInfo.py --help
+USAGE:
+
+    python /home/chengys/workspace/DigitalLifeCardDIY/addInfo.py [opt]
+
+opts:
+        -c / --cil:                   (DEFAULT) Generate DigitalLife Card UV in console.
+        -g / --group [csv file]:      Auto generate DigitalLife Card UVs for group.
+        -o / --output [output path]:  Set output dir, can work with -c and -g command
+                                      Dafault: ./output/
+        -v / --version:               Display script version & developer's information
+        -h / --help:                  Display this help file
+```
+
+### 1. 命令行交互式生成自定义生命卡水贴
+
+即使不使用输入参数，使用python执行脚本，即可根据交互命令进行自定义
 
 ```bash
 python addInfo.py 
@@ -109,6 +128,11 @@ TIF 生成成功
 样例输出：（透明背景白色图案，请点击查看）
 
 ![image](output/爱莉希雅.png)
+
+
+### 2. 从csv文件中批量读取和生成
+
+
 
 ## 文件说明
 

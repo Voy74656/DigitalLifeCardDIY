@@ -2,3 +2,10 @@ digital-life-card-generate.py
 config.py
 
 .vscode/
+tmp/**
+**/test/**
+
+./*.csv
+!demo.csv
+
+数字生命卡.ai
