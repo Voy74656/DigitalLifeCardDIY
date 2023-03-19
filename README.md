@@ -133,8 +133,8 @@ TIF 生成成功
 
 ```bash
 python addInfo.py -g [csv file] -o [output path]
-# -o 可选，默认为./output/
-# -g 默认 [csv file] 为./demo.csv
+# -g 选项下默认 [csv file] 为./demo.csv
+# -o 可选，[output path]默认为./output/
 ```
 
 csv文件的结构和表标题如下所示：  
