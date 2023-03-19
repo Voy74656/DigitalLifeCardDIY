@@ -4,6 +4,8 @@ import re
 import sys
 import uuid
 
+import base64
+
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -62,13 +64,16 @@ class Filter:
     @staticmethod
     def titleMap_DL2CSV(keyDL):
         mapdict = {
-            'nameCN':'中文姓名', 
-            'nameEN':'拼音或英文名', 
-            'birthDate': '生日', 
-            'trCode': '右上年份',
-            'barCode': '条形码数据', 
-            'snCode':'SN码', 
-            'orderID':'淘宝订单号'
+            'submitTime':'提交时间（自动）',
+            'submitUser':'提交者（自动）'
+            'nameCN':'你需要定制的姓名是？（必填）', 
+            'nameEN':'你是否需要定制拼音/英文名，需要的话是？', 
+            'birthDate': '你需要定制的日期是？（必填）', 
+            'trCode': '年份',
+            'barCode': '你需要定制的条形码内容是？（必填）', 
+            'snCode':'条形码上方编号是？', 
+            'orderID':'你的订单号是？（必填）',
+            'otherCommits':'有什么别的备注？'
         }
         return mapdict[keyDL]
         
@@ -246,11 +251,11 @@ class DigitalLifeUVs:
             self.data = self.readfromCSV(data)
             return
         assert isinstance(data,list), 'date Type error'
-        self.data = {idx+1:dl for idx, dl in enumerate(data) if isinstance(dl, singleDigitalLifeUV)}
+        self.data = {idx+1:{'dl':dl, 'orderedID':idx+1}} for idx, dl in enumerate(data) if isinstance(dl, singleDigitalLifeUV)}
         pass
     def export(self, suffix:str = '', outputPath='./output/'):
         for id, dl in self.data.items():
-            dl.export(suffix=suffix, outputPath=outputPath, filenameOveride=id+'_'+dl.nameCN)
+            dl['dl'].export(suffix=suffix, outputPath=outputPath, filenameOveride=dl['orderedID']+'_'+dl['dl'].nameCN)
     @staticmethod
     def readfromCSV(filename):
         import csv
@@ -259,11 +264,13 @@ class DigitalLifeUVs:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 ordered_id = row[Filter.titleMap_DL2CSV('orderID')]
+                otherCommit = row[Filter.titleMap_DL2CSV('otherCommits')]
+                _uuid = str(base64.b64encode(row[Filter.titleMap_DL2CSV('submitTime')]+ row[Filter.titleMap_DL2CSV('submitUser')].encode('utf-8')), 'utf-8'))
                 # data = {Filter.titleMap_DL2CSV(i):row[Filter.titleMap_DL2CSV(i)] for i in }
                 # d = DEFAULT_DL._asdict()
                 d = {k:row[Filter.titleMap_DL2CSV(k)] for k,_ in DEFAULT_DL._asdict().items() if k!='basePNG'}
                 d['basePNG'] = DEFAULT_DL.basePNG
-                data[ordered_id] = singleDigitalLifeUV(d)
+                data[_uuid] = {'dl':singleDigitalLifeUV(d), 'orderedID': ordered_id}
         return data
         
 
