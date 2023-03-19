@@ -129,20 +129,32 @@ TIF 生成成功
 
 ![image](output/爱莉希雅.png)
 
-
 ### 2. 从csv文件中批量读取和生成
 
+```bash
+python addInfo.py -g [csv file] -o [output path]
+# -o 可选，默认为./output/
+# -g 默认 [csv file] 为./demo.csv
+```
 
+csv文件的结构和表标题如下所示：  
+
+|中文姓名 | 拼音或英文名 | 生日 | 右上年份 | 条形码数据 | SN码 | 唯一ID |
+| :---: | :---: | :---: | :---:| :---: | :---: | :---: |
+| 爱莉希雅 | EGO-ELYSIA | 20211111 | CM02 | Elysian Realm CM02 | Miss Pink Elf ~ | FAKE1234 |
+| ... | ... | ... | ... | ... | ... | ... |
+
+相应的代码映射请参考`addInfo.py`中`Filter.titleMap_DL2CSV()`函数的实现与`DigitalLifeUVs.readfromCSV()`的操作
 
 ## 文件说明
 
 ```bash
-Version 1.0
+Version 2.0
 
 文件说明
 │  addInfo.py                                   // 自动添加信息的python脚本
 │  readme.txt
-│  数字生命卡.ai                                 // 水贴图的AI格式文件，可以自己打开编辑信息
+│  demo.csv                                     // 自动批量制作的样本
 │  水贴底图4K B.png                              // 导出的4K分辨率底图 B 面底图用于脚本批量生成
 │  水贴成品 4K A.png                             // 导出的4K分辨率底图 A 面，大家通用
 │
@@ -151,9 +163,6 @@ Version 1.0
 │      HarmonyOS_Sans_SC_Regular.ttf
 │
 └─output
-        barcode.png                             // 根据文本生成的条形码，可以扫出信息
-        barcode_bin.png                         // 条形码最终水贴图，已经变成白色，无法扫码，仅作对比
-        barcode_crop.png                        // 条形码截取图，仅作对比
-        刘培茄.png                               // 代码生成的透明图片，以代码中的 my_name 作为文件名，可以拿去创作
-        刘培茄.tif                               // 代码生成的文件，以代码中的 my_name 作为文件名，水贴制作需要tif格式
+        爱莉希雅.png                               // 代码生成的透明图片，以代码中的 my_name 作为文件名，可以拿去创作
+        爱莉希雅.tif                               // 代码生成的文件，以代码中的 my_name 作为文件名，水贴制作需要tif格式
 ```
