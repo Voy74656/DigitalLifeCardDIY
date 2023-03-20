@@ -1,5 +1,6 @@
 
 # coding=UTF-8
+import os
 import re
 import uuid
 
@@ -13,7 +14,7 @@ from collections import namedtuple
 
 from lib.utils import DotDict, Filter
 
-from lib.defaultConfig import BARCODE_TEMP_DIR, BARCODE_UUID_ENABLE_KEY, BASE_IMAGE, DEAFULT_PINYIN, DEFAULT_BARCODE, DEFAULT_BIRTH_DATE, DEFAULT_FONTFAMILY, DEFAULT_NAME_CN, DEFAULT_NAME_EN, DEFAULT_SN_CODE, DEFAULT_TOP_RIGHT_CODE
+from lib.defaultConfig import BARCODE_TEMP, BARCODE_UUID_ENABLE_KEY, BASE_IMAGE, DEAFULT_PINYIN, DEFAULT_BARCODE, DEFAULT_BIRTH_DATE, DEFAULT_FONTFAMILY, DEFAULT_NAME_CN, DEFAULT_NAME_EN, DEFAULT_SN_CODE, DEFAULT_TOP_RIGHT_CODE
 
 
 def _get_pinyin(nameCN, pinyin=DEAFULT_PINYIN):
@@ -49,14 +50,13 @@ class singleDigitalLifeUV:
         self.trCode = Filter.equelLength(Filter.onlyASCII(
             data.trCode, DEFAULT_TOP_RIGHT_CODE), DEFAULT_TOP_RIGHT_CODE)
         self.barCode = Filter.cutoffandComplete(Filter.onlyASCII(
-            data.barCode, DEFAULT_TOP_RIGHT_CODE), 18, '-')
+            data.barCode, DEFAULT_BARCODE), 18, '-')
         self.snCode = Filter.cutoff(
             Filter.onlyASCII(data.snCode, DEFAULT_SN_CODE), 20)
         self.basePNG = data.basePNG
 
         # private parameters
         self._exportImgTypes = exportImgTypes
-        self._barcodeTmpDir = BARCODE_TEMP_DIR
         # self._outputPath=outputPath
         pass
 
@@ -87,20 +87,20 @@ class singleDigitalLifeUV:
 
         return singleDigitalLifeUV(rawDigitalLifeUV(nameCN, nameEN, birthDate, trCode, barCode, snCode))
 
-    def export(self, suffix: str = '', outputPath='./output/', filenameOveride=None):
+    def export(self, suffix: str = '', outputPath='./output/', filenameOveride=None, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
         assert suffix in ['tif', 'png', 'json',
                           ''], "illegal output file type !"
         if suffix == 'json':
             return self.__dict__
         _filename = filenameOveride if filenameOveride else self.nameCN
-        _img = self._radar_img()
+        _img = self._radar_img(tmpBrcode,delTmpBrcode)
         if suffix == '':
             for sf in self._exportImgTypes:
                 self._imgsavewarpper(_img, f'{outputPath}{_filename}.{sf}')
         else:
             self._imgsavewarpper(_img, f'{outputPath}{_filename}.{sf}')
 
-    def _radar_img(self):
+    def _radar_img(self, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
         img = Image.open(fp=self.basePNG)
         draw = ImageDraw.Draw(img)
         # 添加姓名
@@ -120,7 +120,7 @@ class singleDigitalLifeUV:
         draw.text(xy=(2705 - len(self.snCode) * 40, 1010), text=self.snCode,
                   fill=(255, 255, 255), font=DEFAULT_FONTFAMILY.snCode)
         # 添加条码
-        b_code_img = self._gen_barcode(self.barCode, self._barcodeTmpDir)
+        b_code_img = self._gen_barcode(self.barCode, tmpBrcode, delTmpBrcode)
         img.paste(b_code_img, (1380, 1110))
         return img
 
@@ -136,10 +136,10 @@ class singleDigitalLifeUV:
         return
 
     @staticmethod
-    def _gen_barcode(text, barcodeTmpDir=BARCODE_TEMP_DIR):
+    def _gen_barcode(text, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
         b = barcode.get("code128", text, writer=bcWriter())
-        b.save(f'{barcodeTmpDir}barcode')
-        with open(f'{barcodeTmpDir}barcode.png', "rb") as f:
+        b.save(f'{tmpBrcode}')
+        with open(f'{tmpBrcode}.png', "rb") as f:
             barcodeimg = Image.open(fp=f)
             barcodeimg = barcodeimg.crop((20, 20, 600, 50))
             # barcodeimg.save("./output/barcode_crop.png")
@@ -155,7 +155,9 @@ class singleDigitalLifeUV:
                     else:
                         barcodeimg.putpixel((x, y), (255, 255, 255, 255))
             # barcodeimg.save("./output/barcode_bin.png")
-            return barcodeimg
+        if delTmpBrcode:
+            os.remove(f'{tmpBrcode}.png')
+        return barcodeimg
 
 
 class DigitalLifeUVs:
@@ -168,10 +170,12 @@ class DigitalLifeUVs:
                      dl in enumerate(data) if isinstance(dl, singleDigitalLifeUV)}
         pass
 
-    def export(self, suffix: str = '', outputPath='./output/'):
+    def export(self, suffix: str = '', outputPath='./output/',filenameOveride=None, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
         for id, dl in self.data.items():
             dl['dl'].export(suffix=suffix, outputPath=outputPath,
-                            filenameOveride=dl['orderedID']+'_'+dl['dl'].nameCN)
+                            filenameOveride=dl['orderedID']+'_'+dl['dl'].nameCN, tmpBrcode=tmpBrcode, delTmpBrcode=False)
+        if delTmpBrcode:
+            os.remove(f'{tmpBrcode}.png')
 
     @staticmethod
     def readfromCSV(filename):

@@ -2,7 +2,7 @@
 import getopt
 import sys
 
-from lib.defaultConfig import DEFAULT_OUTPUT_PATH, TEST_CSV
+from lib.defaultConfig import BARCODE_TEMP, DEFAULT_OUTPUT_PATH, TEST_CSV
 from lib.dataFormat import DigitalLifeUVs, singleDigitalLifeUV
 
 def generate_digital_lifecard(argv = sys.argv[1:]):
@@ -36,7 +36,7 @@ def generate_digital_lifecard(argv = sys.argv[1:]):
             data = singleDigitalLifeUV.from_cli()
     if not data:
         data = singleDigitalLifeUV.from_cli()
-    data.export(outputPath=_output_path)
+    data.export(outputPath=_output_path, tmpBrcode=BARCODE_TEMP, delTmpBrcode=True)
 
 
 if __name__ =="__main__":

@@ -4,10 +4,6 @@ import uuid
 
 from PIL import ImageFont
 
-BARCODETEMPDIR = './tmp/'
-
-BARCODE_UUID_ENABLE = '__UUID__'
-
 def generate_random_barcode():
     return ''.join(str(uuid.uuid1(clock_seq=18)).split('-'))[:18]
 

@@ -150,19 +150,31 @@ csv文件的结构和表标题如下所示：
 
 ```bash
 Version 2.0
-
-文件说明
-│  generator.py                                   // 自动添加信息的python脚本
-│  readme.txt
-│  demo.csv                                     // 自动批量制作的样本
-│  水贴底图4K B.png                              // 导出的4K分辨率底图 B 面底图用于脚本批量生成
-│  水贴成品 4K A.png                             // 导出的4K分辨率底图 A 面，大家通用
-│
-├─necessary fonts                               // 字体文件夹，使用 数字生命卡.AI 文件需要这两个字体
-│      DINPro-Medium.otf
-│      HarmonyOS_Sans_SC_Regular.ttf
-│
-└─output
-        爱莉希雅.png                               // 代码生成的透明图片，以代码中的 my_name 作为文件名，可以拿去创作
-        爱莉希雅.tif                               // 代码生成的文件，以代码中的 my_name 作为文件名，水贴制作需要tif格式
+.
+├── lib                                                 # 库文件目录
+│   ├── __init__.py
+│   ├── dataFormat.py
+│   ├── defaultConfig.py                                # 默认配置文件，需要修改默认配置可编辑
+│   └── utils.py
+├── resources                                           # 资源文件夹
+│   ├── fonts                                           # 字体文件夹
+│   │   ├── DINPro-Medium.otf
+│   │   ├── HarmonyOS_Sans_SC_Black.ttf
+│   │   ├── HarmonyOS_Sans_SC_Bold.ttf
+│   │   ├── HarmonyOS_Sans_SC_Medium.ttf
+│   │   └── HarmonyOS_Sans_SC_Regular.ttf
+│   ├── 水贴底图 4K B.png                                # 默认底图
+│   └── 水贴成品 4K A.png
+├── test                                                
+│   └── demo.csv                                        # csv输出测试样本文件
+├── output                                              # 默认输出文件夹
+│   ├── 爱莉希雅.png
+│   ├── 爱莉希雅.tif
+│   ├── 秦始皇.png
+│   └── 秦始皇.tif
+├── generator.py                                        # 脚本文件，命令行调用入口
+├── README.md                                           # readme 文档（Markdown 格式）
+├── readme.txt                                          # readme 文档（Txt 格式）
+├── requirement.txt                                     # 项目依赖库列表，可以使用pip管理安装
+└── LICENSE                                             # 项目开源协议（MIT）
 ```

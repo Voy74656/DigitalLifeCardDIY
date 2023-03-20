@@ -33,6 +33,6 @@ DEAFULT_PINYIN = Pinyin()
 
 DEFAULT_FONTFAMILY = utils.FontFamily()
 
-BARCODE_TEMP_DIR = './tmp/'
+BARCODE_TEMP = './output/tmpBrcode'
 
 BARCODE_UUID_ENABLE_KEY = '__UUID__'
