@@ -135,6 +135,7 @@ TIF 生成成功
 python addInfo.py -g [csv file] -o [output path]
 # -g 选项下默认 [csv file] 为./demo.csv
 # -o 可选，[output path]默认为./output/
+# csv批量导出的默认命名规则：订单号_定制姓名.png/tif
 ```
 
 csv文件的结构和表标题如下所示： 
