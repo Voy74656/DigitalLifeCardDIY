@@ -35,9 +35,7 @@ default_dl = rawDigitalLifeUV()
 
 
 class singleDigitalLifeUV:
-    def __init__(self, data, exportImgTypes: list = ['tif', 'png']) -> None:
-        if isinstance(data, str):
-            data = self._fromCfg(file=data)
+    def __init__(self, data=default_dl, exportImgTypes: list = ['tif', 'png']) -> None:
         if isinstance(data, dict):
             data = DotDict(data)
         if not isinstance(data, (rawDigitalLifeUV, DotDict)):
@@ -65,25 +63,28 @@ class singleDigitalLifeUV:
         nameCN = input(
             f'输入名字，最多四个字，仅截取中文，默认为{DEFAULT_NAME_CN}：') or DEFAULT_NAME_CN
 
-        nameEN = _get_pinyin(Filter.cutoff(nameCN, 4))
-        if input(f'\n名字拼音为：{nameEN}\n是否修改输入拼音/英文名？\n输入y进入手动输入，不输入或输入其他跳过\n') == 'y':
-            nameEN = input("\n输入名字拼音或英文名。支持ASCII字符：\n").upper()
-        print(f'英文名已经设置为：{nameEN}')
+        _nameEN = _get_pinyin(Filter.cutoff(nameCN, 4))
+        nameEN = input(
+            f'是否修改名字拼音或英文名？（支持ASCII字符）\n不输入使用默认拼音转换结果：{_nameEN}：\n') or _nameEN
+        print(f'拼音或英文名已经设置为：{nameEN}')
 
         birthDate = input(
-            f'\n输入生日，示例：{DEFAULT_BIRTH_DATE}：\n') or DEFAULT_BIRTH_DATE
+            f'\n输入生日，不输入即为默认：{DEFAULT_BIRTH_DATE}：\n') or DEFAULT_BIRTH_DATE
+        print(f'生日已经设置为：{birthDate}')
 
         barCode = input(
-            "\n输入条形码内容，\n 格式为18个非中文字符\n输入__UUID__可以自动生成18位随机字符\n也可以输出自定义输入，少于18位会自动使用 - 填补\n").ljust(18, '-')  # 条形码内容
-        if barCode.upper() == BARCODE_UUID_ENABLE_KEY.ljust(18, '-'):
-            barCode = ''.join(str(uuid.uuid1(clock_seq=18)).split('-'))[:18]
+            f'\n输入条形码内容，\n格式为18个非中文字符，少于18位会自动使用 - 填补\n不输入可以自动生成18位随机字符: {DEFAULT_BARCODE}\n').ljust(18, '-')  # 条形码内容
+        if barCode.upper() == BARCODE_UUID_ENABLE_KEY.upper().ljust(18, '-'):
+            barCode = DEFAULT_BARCODE
         print(f'条形码已经设置为：{barCode}')
 
         trCode = input(
-            "\n顶部年份，固定四位\n也可自定义为其他四位短语，仅支持非中文字符\n，示例：1900，CM02等：\n")  # 顶部年份
+            f'\n顶部年份，固定四位\n也可自定义为其他四位短语，仅支持非中文字符\n，示例：1900，CM02等\n不输入即为默认：{DEFAULT_TOP_RIGHT_CODE}\n') or DEFAULT_TOP_RIGHT_CODE  # 顶部年份
+        print(f'顶部年份已经设置为：{trCode}')
 
         snCode = input(
-            "\n输入自定义sn码\n不输入即为默认(PN-R-DSM01 A513C)\n") or DEFAULT_SN_CODE  # 生日
+            f'\n输入自定义sn码\n不输入即为默认：{DEFAULT_SN_CODE}\n') or DEFAULT_SN_CODE  # 生日
+        print(f'sn码已经设置为：{snCode}')
 
         return singleDigitalLifeUV(rawDigitalLifeUV(nameCN, nameEN, birthDate, trCode, barCode, snCode))
 
@@ -131,9 +132,9 @@ class singleDigitalLifeUV:
         except:
             print(f'\n{filename} 生成失败！\n')
 
-    @staticmethod
-    def _fromCfg(file: str) -> rawDigitalLifeUV:
-        return
+    # @staticmethod
+    # def _fromCfg(file: str) -> rawDigitalLifeUV:
+    #     return
 
     @staticmethod
     def _gen_barcode(text, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
