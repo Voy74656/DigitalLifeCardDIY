@@ -6,7 +6,7 @@
 
 示意图2：（透明背景白色图案，请点击查看）
 
-![image](水贴成品%204K%20A.png)
+![image](output/%E7%A7%A6%E5%A7%8B%E7%9A%87.png)
 
 ## 使用准备
 
@@ -23,7 +23,7 @@ voy74656@Dell-G15-5515:~$ python3 -V
 Python 3.10.6
 ```
 
-**检查pip安装**
+**检查pip安装：**
 
 > pip 是一个现代的，通用的 Python 包管理工具。提供了对 Python 包的查找、下载、安装、卸载的功能。
 
@@ -64,17 +64,26 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirement.txt
 
 ```bash
 voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python3 ./generator.py --help
+
 USAGE:
 
     python /home/chengys/workspace/DigitalLifeCardDIY/generator.py [opt]
 
 opts:
-        -c / --cil:                   (DEFAULT) Generate DigitalLife Card UV in console.
-        -g / --group [csv file]:      Auto generate DigitalLife Card UVs for group.
-        -o / --output [output path]:  Set output dir, can work with -c and -g command
-                                      Dafault: ./output/
-        -v / --version:               Display script version & developer's information
-        -h / --help:                  Display this help file
+        -c [--cil]:                     (DEFAULT) Generate DigitalLife Card UV in interactive console.
+        -q [--quite]:                   Generate DigitalLife Card UV with default config.
+                                        Demo for test: /home/chengys/workspace/DigitalLifeCardDIY/test/demo.csv
+        -g [--group=]<csv file>:        Auto generate DigitalLife Card UVs for group.
+        -o [--output=]<output path>:    Set output dir, can work with -c and -g command
+                                        Dafault: /home/chengys/workspace/DigitalLifeCardDIY/output/
+        -v [--version:]                 Display script version & developer information
+        -h [--help:]                    Display this help file
+
+
+VERSION 2.0                     By @Voy74654
+refer: 
+    [github] https://github.com/Voy74656/DigitalLifeCardDIY
+    [gitee]  https://gitee.com/Voy74656/DigitalLifeCardDIY
 ```
 
 ### 1. 命令行交互式生成自定义生命卡水贴
@@ -138,7 +147,7 @@ python generator.py -g [csv file] -o [output path]
 # csv批量导出的默认命名规则：订单号_定制姓名.png/tif
 ```
 
-csv文件的结构和表标题如下所示： 
+csv文件的结构和表标题如下所示：
 
 |提交时间（自动）|你需要定制的姓名是？（必填）|你是否需要定制拼音或英文名，需要的话是？|你需要定制的日期是？（必填）|你需要定制的条形码内容是？（必填）|条形码上方编号是？|年份|你的订单号是？（必填）|有什么别的备注？|提交者（自动）|
 | :---: | :---: | :---: | :---:| :---: | :---: | :---: | :---: | :---: | :---: |

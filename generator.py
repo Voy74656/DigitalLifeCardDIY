@@ -10,14 +10,14 @@ def generate_digital_lifecard(argv = sys.argv[1:]):
     opts, args = getopt.getopt(argv, '-h-c-g:-o:-v-q', ['help','cil','group', 'output', 'version','quiet'])
     def help():
         print(f'\nUSAGE:\n\n    python {__file__} [opt]\n\nopts:\n'+
-              '        -c [--cil]:                      (DEFAULT) Generate DigitalLife Card UV in interactive console.\n'+
-              '        -q [--quite]:                    Generate DigitalLife Card UV with default config.\n'+
-             f'                                         Demo for test: { os.path.join(os.getcwd(), TEST_CSV) }\n'
-              '        -g [--group = ] <csv file>:      Auto generate DigitalLife Card UVs for group.\n'+
-              '        -o [--output = ] <output path>:  Set output dir, can work with -c and -g command\n'+
-             f'                                         Dafault: { os.path.join(os.getcwd(), DEFAULT_OUTPUT_PATH) }\n'
-              '        -v [--version:]                  Display script version & developer\'s information\n'+
-              '        -h [--help:]                     Display this help file')
+              '        -c [--cil]:                     (DEFAULT) Generate DigitalLife Card UV in interactive console.\n'+
+              '        -q [--quite]:                   Generate DigitalLife Card UV with default config.\n'+
+             f'                                        Demo for test: { os.path.join(os.getcwd(), TEST_CSV) }\n'
+              '        -g [--group=]<csv file>:        Auto generate DigitalLife Card UVs for group.\n'+
+              '        -o [--output=]<output path>:    Set output dir, can work with -c and -g command\n'+
+             f'                                        Dafault: { os.path.join(os.getcwd(), DEFAULT_OUTPUT_PATH) }\n'
+              '        -v [--version:]                 Display script version & developer information\n'+
+              '        -h [--help:]                    Display this help file')
         print('\n')
         version()
         # sys.exit()
