@@ -133,8 +133,8 @@ TIF 生成成功
 
 ```bash
 python generator.py -g [csv file] -o [output path]
-# -g 选项下默认 [csv file] 为./demo.csv
-# -o 可选，[output path]默认为./output/
+# -g 选项下需要填写csv文件路径[csv file]，测试样本为./test/demo.csv
+# -o 可选设置输出路径，如不选择，[output path]默认为./output/
 # csv批量导出的默认命名规则：订单号_定制姓名.png/tif
 ```
 

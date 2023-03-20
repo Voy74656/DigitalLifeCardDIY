@@ -2,8 +2,8 @@
 import getopt
 import sys
 
-from lib.config import DEFAULT_OUTPUT_PATH
-from lib.dataformat import DigitalLifeUVs, singleDigitalLifeUV
+from lib.defaultConfig import DEFAULT_OUTPUT_PATH, TEST_CSV
+from lib.dataFormat import DigitalLifeUVs, singleDigitalLifeUV
 
 def generate_digital_lifecard(argv = sys.argv[1:]):
     opts, args = getopt.getopt(argv, '-h-c-g:-o:-v', ['help','cil','group', 'output', 'version'])
@@ -29,9 +29,9 @@ def generate_digital_lifecard(argv = sys.argv[1:]):
         if opt_name in ('-v', '--version'):
             version()
         if opt_name in ('-g', '--group'):
-            data = DigitalLifeUVs(opt_value)
+            data = DigitalLifeUVs(opt_value or TEST_CSV)
         if opt_name in ('-o', '--output'):
-            _output_path = opt_value
+            _output_path = opt_value or DEFAULT_OUTPUT_PATH
         if opt_name in ('-c', '--cil'):
             data = singleDigitalLifeUV.from_cli()
     if not data:

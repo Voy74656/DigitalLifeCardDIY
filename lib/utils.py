@@ -4,8 +4,6 @@ import uuid
 
 from PIL import ImageFont
 
-from collections import namedtuple
-
 BARCODETEMPDIR = './tmp/'
 
 BARCODE_UUID_ENABLE = '__UUID__'
@@ -86,22 +84,22 @@ class DotDict(dict):
 class FontFamily:
     def __init__(self) -> None:
         self.EN = ImageFont.truetype(
-            font="./necessary fonts/DINPro-Medium.otf")
+            font="./resources/fonts/DINPro-Medium.otf")
         self.topEN = ImageFont.truetype(
-            font="./necessary fonts/DINPro-Medium.otf", size=70)
+            font="./resources/fonts/DINPro-Medium.otf", size=70)
         self.trCode = ImageFont.truetype(
-            font="./necessary fonts/HarmonyOS_Sans_SC_Bold.ttf", size=120)
+            font="./resources/fonts/HarmonyOS_Sans_SC_Bold.ttf", size=120)
         self.CN = ImageFont.truetype(
-            font="./necessary fonts/HarmonyOS_Sans_SC_Regular.ttf", size=220)
+            font="./resources/fonts/HarmonyOS_Sans_SC_Regular.ttf", size=220)
         self.snCode = ImageFont.truetype(
-            font="./necessary fonts/HarmonyOS_Sans_SC_Medium.ttf", size=80)
+            font="./resources/fonts/HarmonyOS_Sans_SC_Medium.ttf", size=80)
         self.CN_l = ImageFont.truetype(
-            font="./necessary fonts/HarmonyOS_Sans_SC_Regular.ttf", size=200)
+            font="./resources/fonts/HarmonyOS_Sans_SC_Regular.ttf", size=200)
         pass
     @classmethod
     def CNwithLength(self, isLongName=0):
         size = 200 if isLongName>0 else 220
         return ImageFont.truetype(
-            font="./necessary fonts/HarmonyOS_Sans_SC_Regular.ttf", size=size)
+            font="./resources/fonts/HarmonyOS_Sans_SC_Regular.ttf", size=size)
 
 pxlFont = FontFamily()

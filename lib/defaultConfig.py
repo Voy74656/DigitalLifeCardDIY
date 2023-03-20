@@ -14,7 +14,6 @@ DEFAULT_BARCODE = utils.generate_random_barcode()
 DEFAULT_TOP_RIGHT_CODE = '2023'
 
 
-
 # 输出设置
 
 DEFAULT_OUTPUT_PATH = './output/'
@@ -25,6 +24,8 @@ DEFAULT_OUTPUT_PATH = './output/'
 
 # 默认底图
 BASE_IMAGE = './resources/水贴底图 4K B.png'
+
+TEST_CSV = './test/demo.csv'
 
 # 拼音生成器
 from xpinyin import Pinyin
