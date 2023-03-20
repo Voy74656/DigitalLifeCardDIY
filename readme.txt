@@ -38,10 +38,10 @@ pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirement.txt
 使用方法
 参照帮助
 ### 命令行输出展示开始  ###
-voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python3 ./addInfo.py --help
+voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python3 ./generator.py --help
 USAGE:
 
-    python <path_to_project>/addInfo.py [opt]
+    python <path_to_project>/generator.py [opt]
 
 opts:
         -c / --cil:                   (DEFAULT) Generate DigitalLife Card UV in console.
@@ -55,12 +55,12 @@ opts:
 1. 命令行交互式生成自定义生命卡水贴
 即使不使用输入参数，使用python执行脚本，即可根据交互命令进行自定义
 
-python addInfo.py 
+python generator.py 
 
 以下是一个样例
 
 ### 命令行输出展示开始 ###
-voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python addInfo.py 
+voy74656@Dell-G15-5515:~/workspace/DigitalLifeCardDIY$ python generator.py 
 输入名字，最多四个字，默认为图丫丫：爱莉希雅
 
 名字拼音为：AILIXIYA
@@ -99,7 +99,7 @@ TIF 生成成功
 
 2. 从csv文件中批量读取和生成
 
-python addInfo.py -g [csv file] -o [output path]
+python generator.py -g [csv file] -o [output path]
 # -g 选项下默认 [csv file] 为./demo.csv
 # -o 可选，[output path]默认为./output/
 
@@ -114,7 +114,7 @@ csv文件的结构和表标题如下所示：
 Version 2.0
 
 文件说明
-│  addInfo.py                                   // 自动添加信息的python脚本
+│  generator.py                                   // 自动添加信息的python脚本
 │  readme.txt
 │  demo.csv                                     // 自动批量制作的样本
 │  水贴底图4K B.png                              // 导出的4K分辨率底图 B 面底图用于脚本批量生成

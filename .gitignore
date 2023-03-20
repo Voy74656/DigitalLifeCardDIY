@@ -1,8 +1,9 @@
-digital-life-card-generate.py
-config.py
+**/__pycache__/
+**/*.pyc
 
-.vscode/
-tmp/**
+**/.vscode/
+
+**/tmp/**
 **/test/**
 
 ./*.csv
