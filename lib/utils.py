@@ -4,8 +4,8 @@ import uuid
 
 from PIL import ImageFont
 
-def generate_random_barcode():
-    return ''.join(str(uuid.uuid1(clock_seq=18)).split('-'))[:18]
+def generate_random_barcode(length=18):
+    return ''.join(str(uuid.uuid4()).split('-'))[:length]
 
 class Filter:
     @staticmethod
@@ -16,10 +16,14 @@ class Filter:
         return code
     @staticmethod
     def cutoffandComplete(code, length, complement=''):
-        if len(code) > length:
-            code = code[:length]
-        if complement!='' and len(code) >length:
-            code = code.ljust(length, complement)
+        if len(code) >= length:
+            return code[:length]
+        if complement=='':
+            code = code+generate_random_barcode(length-len(code))
+            print(code)
+            return code
+        else:
+            return code.ljust(length, complement)
         # print('filter.cutoff_and_complete')
         return code
     @staticmethod

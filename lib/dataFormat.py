@@ -71,14 +71,21 @@ class singleDigitalLifeUV:
             f'\n输入生日，不输入即为默认：{DEFAULT_BIRTH_DATE}：\n') or DEFAULT_BIRTH_DATE
         print(f'生日已经设置为：{birthDate}')
 
-        barCode = input(
-            f'\n输入条形码内容，\n格式为{MAXLEN_BARCODE}个非中文字符，少于{MAXLEN_BARCODE}位会自动使用 {BARCODE_COMPLEMENT_SYMBOL} 填补\n不输入可以自动生成{MAXLEN_BARCODE}位随机字符: {DEFAULT_BARCODE}\n').ljust({MAXLEN_BARCODE}, '-')  # 条形码内容
+        _input_help = '不输入' if BARCODE_UUID_ENABLE_KEY == '' else f'输入 {BARCODE_UUID_ENABLE_KEY} '
+
+        _syb2fit = BARCODE_COMPLEMENT_SYMBOL if BARCODE_COMPLEMENT_SYMBOL!='' else "随机串"
+
+        _barcode = input(
+            f'\n输入条形码内容，\n格式为{MAXLEN_BARCODE}个非中文字符，少于{MAXLEN_BARCODE}位会自动使用 {_syb2fit} 填补\n{_input_help}可以自动生成18位随机字符: {DEFAULT_BARCODE}\n')
+        barCode = DEFAULT_BARCODE if _barcode.upper() in ['', BARCODE_UUID_ENABLE_KEY] else _barcode.ljust({MAXLEN_BARCODE}, '-') 
+        # barCode = input(
+        #     f'\n输入条形码内容，\n格式为{MAXLEN_BARCODE}个非中文字符，少于{MAXLEN_BARCODE}位会自动使用 {BARCODE_COMPLEMENT_SYMBOL} 填补\n不输入可以自动生成{MAXLEN_BARCODE}位随机字符: {DEFAULT_BARCODE}\n').ljust({MAXLEN_BARCODE}, '-')  # 条形码内容
         if barCode.upper() == BARCODE_UUID_ENABLE_KEY.upper().ljust(MAXLEN_BARCODE, '-'):
             barCode = DEFAULT_BARCODE
         print(f'条形码已经设置为：{barCode}')
 
         trCode = input(
-            f'\n顶部年份，固定{MAXLEN_TRCODE}位\n也可自定义为其他{MAXLEN_TRCODE}位短语，仅支持非中文字符\n，示例：1900，CM02等\n不输入即为默认：{DEFAULT_TOP_RIGHT_CODE}\n') or DEFAULT_TOP_RIGHT_CODE  # 顶部年份
+            f'\n顶部年份，固定{MAXLEN_TRCODE}位\n也可自定义为其他{MAXLEN_TRCODE}位短语，仅支持非中文字符\n示例：1900，CM02等\n不输入即为默认：{DEFAULT_TOP_RIGHT_CODE}\n') or DEFAULT_TOP_RIGHT_CODE  # 顶部年份
         print(f'顶部年份已经设置为：{trCode}')
 
         snCode = input(
@@ -105,9 +112,8 @@ class singleDigitalLifeUV:
         draw = ImageDraw.Draw(img)
         # 添加姓名
         _islongname = len(self.nameCN) > 3
-        _font = DEFAULT_FONTFAMILY.CN_l if _islongname else DEFAULT_FONTFAMILY.CN
         draw.text(xy=(580, 1000 + _islongname*10), text=self.nameCN,
-                  fill=(255, 255, 255), font=_font)
+                  fill=(255, 255, 255), font=DEFAULT_FONTFAMILY.CNwithLength(_islongname))
         # # 添加姓名拼音加日期
         _top_left_str = " ".join(re.findall(
             ".{1}", self.nameEN + '-A' + self.birthDate))
@@ -137,7 +143,7 @@ class singleDigitalLifeUV:
 
     @staticmethod
     def _gen_barcode(text, tmpBrcode=BARCODE_TEMP, delTmpBrcode=False):
-        b = barcode.get("code128", text, writer=bcWriter())
+        b = barcode.get("code128", text+"----------", writer=bcWriter())
         b.save(f'{tmpBrcode}')
         with open(f'{tmpBrcode}.png', "rb") as f:
             barcodeimg = Image.open(fp=f)
@@ -190,8 +196,6 @@ class DigitalLifeUVs:
                 otherCommit = row[Filter.titleMap_DL2CSV('otherCommits')]
                 _uuid = str(base64.b64encode((row[Filter.titleMap_DL2CSV(
                     'submitTime')] + row[Filter.titleMap_DL2CSV('submitUser')]).encode('utf-8')), 'utf-8')
-                # data = {Filter.titleMap_DL2CSV(i):row[Filter.titleMap_DL2CSV(i)] for i in }
-                # d = DEFAULT_DL._asdict()
                 d = {k: row[Filter.titleMap_DL2CSV(
                     k)] for k, _ in default_dl._asdict().items() if k != 'basePNG'}
                 d['basePNG'] = BASE_IMAGE
