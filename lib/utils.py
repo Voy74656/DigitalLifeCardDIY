@@ -19,7 +19,7 @@ class Filter:
         if len(code) > length:
             code = code[:length]
         if complement!='' and len(code) >length:
-            code = code.ljust(18, complement)
+            code = code.ljust(length, complement)
         # print('filter.cutoff_and_complete')
         return code
     @staticmethod

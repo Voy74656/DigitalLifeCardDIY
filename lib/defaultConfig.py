@@ -27,6 +27,13 @@ BASE_IMAGE = 'resources/水贴底图 4K B.png'
 
 TEST_CSV = 'test/demo.csv'
 
+MAXLEN_BARCODE = 18
+MAXLEN_SNCODE = 20
+MAXLEN_NAMECN = 4
+MAXLEN_TRCODE = 4
+
+BARCODE_COMPLEMENT_SYMBOL = '-'
+
 # 拼音生成器
 from xpinyin import Pinyin
 DEAFULT_PINYIN = Pinyin()

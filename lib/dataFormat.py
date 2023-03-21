@@ -2,7 +2,6 @@
 # coding=UTF-8
 import os
 import re
-import uuid
 
 import base64
 
@@ -14,7 +13,7 @@ from collections import namedtuple
 
 from lib.utils import DotDict, Filter
 
-from lib.defaultConfig import BARCODE_TEMP, BARCODE_UUID_ENABLE_KEY, BASE_IMAGE, DEAFULT_PINYIN, DEFAULT_BARCODE, DEFAULT_BIRTH_DATE, DEFAULT_FONTFAMILY, DEFAULT_NAME_CN, DEFAULT_NAME_EN, DEFAULT_SN_CODE, DEFAULT_TOP_RIGHT_CODE
+from lib.defaultConfig import BARCODE_COMPLEMENT_SYMBOL, BARCODE_TEMP, BARCODE_UUID_ENABLE_KEY, BASE_IMAGE, DEAFULT_PINYIN, DEFAULT_BARCODE, DEFAULT_BIRTH_DATE, DEFAULT_FONTFAMILY, DEFAULT_NAME_CN, DEFAULT_NAME_EN, DEFAULT_SN_CODE, DEFAULT_TOP_RIGHT_CODE, MAXLEN_BARCODE, MAXLEN_NAMECN, MAXLEN_SNCODE, MAXLEN_TRCODE
 
 
 def _get_pinyin(nameCN, pinyin=DEAFULT_PINYIN):
@@ -41,16 +40,16 @@ class singleDigitalLifeUV:
         if not isinstance(data, (rawDigitalLifeUV, DotDict)):
             return
         self.nameCN = Filter.cutoff(
-            Filter.onlyCN(data.nameCN, DEFAULT_NAME_CN), 4)
+            Filter.onlyCN(data.nameCN, DEFAULT_NAME_CN), MAXLEN_NAMECN)
         self.nameEN = Filter.onlyASCII(data.nameEN, _get_pinyin(self.nameCN))
         self.birthDate = Filter.equelLength(Filter.onlyASCII(
             data.birthDate, DEFAULT_BIRTH_DATE), DEFAULT_BIRTH_DATE)
         self.trCode = Filter.equelLength(Filter.onlyASCII(
             data.trCode, DEFAULT_TOP_RIGHT_CODE), DEFAULT_TOP_RIGHT_CODE)
         self.barCode = Filter.cutoffandComplete(Filter.onlyASCII(
-            data.barCode, DEFAULT_BARCODE), 18, '-')
+            data.barCode, DEFAULT_BARCODE), MAXLEN_BARCODE, BARCODE_COMPLEMENT_SYMBOL)
         self.snCode = Filter.cutoff(
-            Filter.onlyASCII(data.snCode, DEFAULT_SN_CODE), 20)
+            Filter.onlyASCII(data.snCode, DEFAULT_SN_CODE), MAXLEN_SNCODE)
         self.basePNG = data.basePNG
 
         # private parameters
@@ -63,7 +62,7 @@ class singleDigitalLifeUV:
         nameCN = input(
             f'输入名字，最多四个字，仅截取中文，默认为{DEFAULT_NAME_CN}：') or DEFAULT_NAME_CN
 
-        _nameEN = _get_pinyin(Filter.cutoff(nameCN, 4))
+        _nameEN = _get_pinyin(Filter.cutoff(nameCN, MAXLEN_NAMECN))
         nameEN = input(
             f'是否修改名字拼音或英文名？（支持ASCII字符）\n不输入使用默认拼音转换结果：{_nameEN}：\n') or _nameEN
         print(f'拼音或英文名已经设置为：{nameEN}')
@@ -73,13 +72,13 @@ class singleDigitalLifeUV:
         print(f'生日已经设置为：{birthDate}')
 
         barCode = input(
-            f'\n输入条形码内容，\n格式为18个非中文字符，少于18位会自动使用 - 填补\n不输入可以自动生成18位随机字符: {DEFAULT_BARCODE}\n').ljust(18, '-')  # 条形码内容
-        if barCode.upper() == BARCODE_UUID_ENABLE_KEY.upper().ljust(18, '-'):
+            f'\n输入条形码内容，\n格式为{MAXLEN_BARCODE}个非中文字符，少于{MAXLEN_BARCODE}位会自动使用 {BARCODE_COMPLEMENT_SYMBOL} 填补\n不输入可以自动生成{MAXLEN_BARCODE}位随机字符: {DEFAULT_BARCODE}\n').ljust({MAXLEN_BARCODE}, '-')  # 条形码内容
+        if barCode.upper() == BARCODE_UUID_ENABLE_KEY.upper().ljust(MAXLEN_BARCODE, '-'):
             barCode = DEFAULT_BARCODE
         print(f'条形码已经设置为：{barCode}')
 
         trCode = input(
-            f'\n顶部年份，固定四位\n也可自定义为其他四位短语，仅支持非中文字符\n，示例：1900，CM02等\n不输入即为默认：{DEFAULT_TOP_RIGHT_CODE}\n') or DEFAULT_TOP_RIGHT_CODE  # 顶部年份
+            f'\n顶部年份，固定{MAXLEN_TRCODE}位\n也可自定义为其他{MAXLEN_TRCODE}位短语，仅支持非中文字符\n，示例：1900，CM02等\n不输入即为默认：{DEFAULT_TOP_RIGHT_CODE}\n') or DEFAULT_TOP_RIGHT_CODE  # 顶部年份
         print(f'顶部年份已经设置为：{trCode}')
 
         snCode = input(
